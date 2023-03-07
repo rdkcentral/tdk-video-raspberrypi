@@ -46,15 +46,20 @@ export VL_DOCSIS_WAN_IF_NAME="wan:1"
 #export LOG4C_RCPATH=/mnt/nfs/env
 export LOG4C_RCPATH=/etc
 
-if [ -f ${TDK_PATH}/rialto_test ]; then
+if [ -f ${TDK_PATH}/graphics_test ] || [ -f ${TDK_PATH}/rialto_test ];then
     #Stopping wpeframework to release westeros instance
     systemctl stop wpeframework
-    #Start westeros renderer for rialto
-    westeros --renderer /usr/lib/libwesteros_render_embedded.so.0.0.0 --embedded --display "westeros-cobalt" --window-size 1920x1080 &
+    #Start westeros renderer for graphics testing
+    westeros --renderer /usr/lib/libwesteros_render_embedded.so.0.0.0 --embedded --display "wayland-0" --window-size 1920x1080 &
+    export WAYLAND_DISPLAY=wayland-0
+    sleep 2
+fi
+
+if [ -f ${TDK_PATH}/rialto_test ]; then
     #Setup environment for Rialto Server
     export RIALTO_DEBUG=2
     export RIALTO_SESSION_SERVER_STARTUP_TIMEOUT_MS=100000000
-    export SESSION_SERVER_ENV_VARS='XDG_RUNTIME_DIR=/tmp;RIALTO_SINKS_RANK=0;GST_REGISTRY=/tmp/rialto-server-gstreamer-cache.bin;WAYLAND_DISPLAY=westeros-cobalt;FORCE_SAP=TRUE;FORCE_SVP=TRUE'
+    export SESSION_SERVER_ENV_VARS='XDG_RUNTIME_DIR=/tmp;RIALTO_SINKS_RANK=0;GST_REGISTRY=/tmp/rialto-server-gstreamer-cache.bin;WAYLAND_DISPLAY=wayland-0;FORCE_SAP=TRUE;FORCE_SVP=TRUE'
     #Start Rialto server manager simulator
     /usr/bin/RialtoServerManagerSim &
     sleep 5
@@ -64,7 +69,6 @@ if [ -f ${TDK_PATH}/rialto_test ]; then
     export GST_REGISTRY=/tmp/rialto-registry.bin
     export RIALTO_CONSOLE_LOG=1
     export RIALTO_SOCKET_PATH=/tmp/rialto-0
-    export WAYLAND_DISPLAY=westeros-cobalt
     export LD_LIBRARY_PATH="$PWD/usr/lib"
     export COBALT_CONTENT_DIR="$PWD/usr/share/content/data"
     export RIALTO_CLIENT_BACKEND_LIB="/usr/lib/libRialtoClient.so"
