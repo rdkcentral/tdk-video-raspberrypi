@@ -24,11 +24,21 @@ export TDK_PATH=/opt/TDK
 
 sleep 1
 
-#Killing inactive TDK processes
-ps -ef | grep "TDKagentMonitor" | grep -v "grep" | awk '{print $2}' | xargs kill -9 >& /dev/null
-sleep 1
-ps -ef | grep "tdk_agent" | grep -v "grep" | grep -v "tr69agent" | awk '{print $2}' | xargs kill -9 >& /dev/null
-ps -ef | grep $TDK_PATH | grep -v "grep" | awk '{print $2}' | xargs kill -9 >& /dev/null
-sleep 2
+if ps -ef > /dev/null 2>&1; then
+    echo "Using ps -ef command"
+    #Killing inactive TDK processes
+    ps -ef | grep TDKagentMonitor | awk '{print $2}' | xargs kill -9 >& /dev/null
+    sleep 1
+    ps -ef | grep tdk_agent | awk '{print $2}' | xargs kill -9 >& /dev/null
+    ps -ef | grep $TDK_PATH | grep -v "grep" | awk '{print $2}' | xargs kill -9 >& /dev/null
+else
+    echo "Using ps command"
+    #Killing inactive TDK processes
+    ps | grep TDKagentMonitor | awk '{print $1}' | xargs kill -9 >& /dev/null
+    sleep 1
+    ps | grep tdk_agent | awk '{print $1}' | xargs kill -9 >& /dev/null
+    ps | grep $TDK_PATH | grep -v "grep" | awk '{print $1}' | xargs kill -9 >& /dev/null
+fi
 
+sleep 2
 echo "Done"
