@@ -44,12 +44,12 @@ dsAudio:
             # An index value used to access a specific port within an array of ports with the same type.
             Index: 0
             # number of supported compressions
-            number_of_supported_compressions: 0
+            number_of_supported_compressions: 2
             # dsAUDIO_CMP_NONE   = 0x00, ///< No audio compression.
             # dsAUDIO_CMP_LIGHT  = 0x01, ///< Light audio level compression.
             # dsAUDIO_CMP_MEDIUM = 0x02, ///< Medium audio level compression.
             # dsAUDIO_CMP_HEAVY  = 0x03, ///< Heavy audio level compression.
-            compressions: [0x00, 0x01, 0x02, 0x03]  # NONE, LIGHT, MEDIUM, HEAVY
+            compressions: [0x00, 0x01]  # NONE, LIGHT
             # Number of supported Stereo modes
             number_of_supported_stereo_modes: 1
             # dsAUDIO_STEREO_UNKNOWN                   = 0x00,  ///< Stereo mode none
